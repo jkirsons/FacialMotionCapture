@@ -12,10 +12,13 @@ class OpenCVAnimOperator(bpy.types.Operator):
     bl_label = "OpenCV Animation Operator"
      
     # p = our pre-treined model directory
+    #p = "D:\\Users\\jason\\shape_predictor_68_face_landmarks.dat" # Windows
     #p = "/Users/jason/Downloads/shape_predictor_68_face_landmarks.dat" # macOS
     p = "/home/jason/Downloads/shape_predictor_68_face_landmarks.dat" # linux
     detector = dlib.get_frontal_face_detector()
     predictor = dlib.shape_predictor(p)
+    # rig_name - take it from your scene collection tree
+    rig_name = "RIG-Vincent"
 
     _timer = None
     _cap  = None
@@ -113,7 +116,7 @@ class OpenCVAnimOperator(bpy.types.Operator):
                 if not hasattr(self, 'first_angle'):
                     self.first_angle = numpy.copy(self.rotation_vector)
              
-                bones = bpy.data.objects["vincent_blenrig"].pose.bones
+                bones = bpy.data.objects[self.rig_name].pose.bones
                  
                 bones["head_fk"].rotation_euler[0] = self.smooth_value("h_x", 3, (self.rotation_vector[0] - self.first_angle[0])) / 1   # Up/Down
                 bones["head_fk"].rotation_euler[2] = self.smooth_value("h_y", 3, -(self.rotation_vector[1] - self.first_angle[1])) / 1.5  # Rotate
